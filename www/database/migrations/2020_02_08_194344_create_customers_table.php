@@ -15,6 +15,7 @@ class CreateCustomersTable extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->uuid('uuid');
             $table->string('cpf', 11);
             $table->string('nome', 100);
             $table->bigInteger('empresa_id')->references('id')->on('enterprises');
