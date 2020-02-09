@@ -14,9 +14,12 @@ class Customer extends Model
         return $this->hasOne('App\Models\Enterprises', 'id');
     }
 
-    public function User()
-    {
-		return $this->morphOne(User::class, 'loginable');
-    }
+	/**
+	 * Get all of the administrator's users.
+	 */
+  public function user()
+  {
+  return $this->morphOne(User::class, 'loginable');
+  }
 
 }
