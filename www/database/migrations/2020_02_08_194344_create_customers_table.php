@@ -16,10 +16,10 @@ class CreateCustomersTable extends Migration
         Schema::create('customers', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->uuid('uuid');
+            $table->string('email')->unique();
             $table->string('cpf', 11);
             $table->string('nome', 100);
             $table->bigInteger('empresa_id')->references('id')->on('enterprises');
-            $table->bigInteger('user_id')->references('id')->on('users');
             $table->timestamps();
         });
     }
