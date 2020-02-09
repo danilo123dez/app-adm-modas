@@ -8,7 +8,7 @@ class Enterprises extends Model
 {
 
     public function Customer(){
-        return $this->hasMany('App\Models\Customer');
+        return $this->hasMany('App\Models\Customer', 'empresa_id');
     }
 
     public function Stores(){

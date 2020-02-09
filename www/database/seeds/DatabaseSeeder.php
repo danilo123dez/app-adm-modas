@@ -1,9 +1,10 @@
 <?php
 
-use App\Models\Enterprises;
 use App\Models\User;
-use Illuminate\Database\Seeder;
+use App\Models\Customer;
+use App\Models\Enterprises;
 use Illuminate\Support\Str;
+use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -28,7 +29,8 @@ class DatabaseSeeder extends Seeder
                 'nome' => $faker->name
             ]);
 
-            $user->Customer()->create([
+            $customer = Customer::create([
+                'email' => $user->email,
                 'cpf' => $faker->numberBetween('10000000000', '99999999999'),
                 'nome' => $faker->unique()->safeEmail,
                 'empresa_id' => $empresa->id
