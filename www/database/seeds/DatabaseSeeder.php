@@ -19,21 +19,24 @@ class DatabaseSeeder extends Seeder
         $count_user = 0;
 
         while($count_user < 5){
-            $user = User::create([
-                'name' => $faker->name,
-                'email' => $faker->unique()->safeEmail,
-                'password' => $faker->password,
-            ]);
 
             $empresa = Enterprises::create([
                 'nome' => $faker->name
             ]);
 
             $customer = Customer::create([
-                'email' => $user->email,
+                'email' => $faker->unique()->safeEmail,
                 'cpf' => $faker->numberBetween('10000000000', '99999999999'),
                 'nome' => $faker->unique()->safeEmail,
                 'empresa_id' => $empresa->id
+            ]);
+
+            $user = User::create([
+                'name' => $faker->name,
+                'email' => $customer->email,
+                'password' => $faker->password,
+                'loginable_type' => Customer::class,
+                'loginable_id' => $customer->id
             ]);
 
             $count_user++;
