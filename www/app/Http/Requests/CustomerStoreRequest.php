@@ -38,15 +38,18 @@ class CustomerStoreRequest extends FormRequest
 		return $fillable;
 
 	}
-
-
-	public function attributes()
+	
+	public function messages()
 	{
 		return [
-			'email' => 'E-mail',
+			'email.required' => 'O e-mail é obrigatório',
+			'email.unique' => 'O e-mail inserido já está em uso',
+			'password.required' => 'A senha é obrigatória',
+			'enterprise_name.required' => 'O nome da empresa é obrigatório',
+			'cpf.required' => 'O CPF é obrigatório',
+			'nome.required' => 'O nome é obrigatório'
 		];
-
-    }
+	}
     
 
 	protected function failedValidation(Validator $validator)

@@ -32,7 +32,6 @@ class DatabaseSeeder extends Seeder
             ]);
 
             $user = User::create([
-                'name' => $faker->name,
                 'email' => $customer->email,
                 'password' => $faker->password,
                 'loginable_type' => Customer::class,

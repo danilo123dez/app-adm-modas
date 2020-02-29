@@ -26,6 +26,7 @@ class CustomerController extends Controller
 
             $customer = Customer::create([
                 'cpf' => $request['cpf'],
+                'email' => $request['email'],
                 'nome' => $request['nome'],
                 'empresa_id' => $enterprise->id
             ]);
@@ -34,13 +35,13 @@ class CustomerController extends Controller
                 'email' => $customer->email,
                 'password' => $request['password']
             ]);
-            DB::rollBack();
             return [
                 'error' => 0,
                 'code' => 'stored_customer',
                 'description' => 'Cadastro feito com sucesso'
             ];   
         }catch(Exception $e){
+            DB::rollBack();
             Log::error('[Store Customer]', [$e->getMessage(), [$e->getLine(), $e->getFile()]]);
             return [
                 'error' => 1,
@@ -51,7 +52,7 @@ class CustomerController extends Controller
     }
 
     public function update($uuid, Request $request) {
-
+        
         $customer = Customer::where('uuid', $uuid)->first();
 
         if(empty($customer)){
