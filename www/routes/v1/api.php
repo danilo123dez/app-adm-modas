@@ -17,3 +17,12 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::group(['prefix' => 'customers'], function () {
+    Route::post('/', 'CustomerController@store');
+
+    Route::group(['prefix' => '{uuid}'], function () {
+        Route::put('/', 'CustomerController@update');
+    });
+
+});
