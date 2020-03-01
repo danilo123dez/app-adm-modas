@@ -31,7 +31,7 @@ class CustomerStoreRequest extends FormRequest
             'email' => 'required|email|unique:users',
             'password' => 'required',
 			'enterprise_name' => 'required',
-			'cpf' => 'required',
+			'cpf' => 'required|min:11',
             'nome' => 'required'
 		];
 

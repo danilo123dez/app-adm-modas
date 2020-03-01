@@ -31,6 +31,6 @@ Route::group(['prefix' => 'customers', 'middleware' => 'client:customer-register
 
     Route::group(['prefix' => '{uuid}'], function () {
         Route::put('/', 'CustomerController@update');
+        Route::delete('/', 'CustomerController@delete');
     });
-
 });
