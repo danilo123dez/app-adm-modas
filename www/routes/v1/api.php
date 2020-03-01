@@ -14,11 +14,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/', function () {
+	return response()->json([
+		'error' => 1,
+		'code' => 'oauth_unauthorized',
+		'description' => "Winning is not everything, but the effort to win is. - Zig Ziglar"
+	], 401);
+})->name('login');
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['prefix' => 'customers'], function () {
+Route::group(['prefix' => 'customers', 'middleware' => 'client:customer-register'], function () {
     Route::post('/', 'CustomerController@store');
 
     Route::group(['prefix' => '{uuid}'], function () {
