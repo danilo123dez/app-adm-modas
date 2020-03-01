@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\CustomerStoreRequest;
+use Illuminate\Contracts\Session\Session;
 use LaravelLegends\PtBrValidator\Validator;
 
 class CustomerController extends Controller

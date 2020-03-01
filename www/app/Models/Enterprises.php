@@ -14,7 +14,7 @@ class Enterprises extends Model
     }
 
     public function Stores(){
-        return $this->hasMany('App\Models\Stores');
+        return $this->hasMany('App\Models\Stores', 'empresa_id');
     }
 
 }

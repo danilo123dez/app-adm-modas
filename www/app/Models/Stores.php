@@ -6,12 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Stores extends Model
 {
+    protected $fillable = ['nome', 'comissao', 'empresa_id'];
 
     public function Releases(){
         return $this->hasMany('App\Models\Releases');
     }
 
     public function Enterprise() {
-        return $this->belongsTo('App\Models\Enterprises');
+        return $this->belongsTo('App\Models\Enterprises', 'empresa_id', 'id');
     }
 }
