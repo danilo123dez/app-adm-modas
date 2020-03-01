@@ -15,7 +15,6 @@ use LaravelLegends\PtBrValidator\Validator;
 class CustomerController extends Controller
 {
 
-
     public function store(CustomerStoreRequest $request){
 
         try{
@@ -52,18 +51,72 @@ class CustomerController extends Controller
     }
 
     public function update($uuid, Request $request) {
-        
-        $customer = Customer::where('uuid', $uuid)->first();
 
-        if(empty($customer)){
+        try {
+            $customer = Customer::where('uuid', $uuid)->first();
+            $customerEmail = Customer::where('email', $request['email'])->first();
+    
+            if(empty($customer)){
+                return [
+                    'error' => 1,
+                    'code' => 'customer_not_found',
+                    'description' => 'Usuário não listado na base de dados'
+                ];
+            }
+    
+            if (!empty($customerEmail)) {
+                return [
+                    'error' => 1,
+                    'code' => 'email_already_exists',
+                    'description' => 'E-mail já está em uso'
+                ];
+            }
+            
+            $customer->update($request->all());
+
+            return [
+                'error' => 0,
+                'code' => 'updated_customer',
+                'description' => 'Atualizado com sucesso'
+            ];  
+
+        } catch (Exception $e) {
+            Log::error('[Update Customer]', [$e->getMessage(), [$e->getLine(), $e->getFile()]]);
             return [
                 'error' => 1,
-                'code' => 'customer_not_found',
-                'description' => 'Usuário não listado na base de dados'
-
+                'code' => 'invalid_request',
+                'description' => 'Ocorreu um erro inesperado'
             ];
         }
-        
-        $customer->update($request->all());
+    }
+
+    public function delete($uuid, Request $request) {
+        try {
+            $customer = Customer::where('uuid', $uuid)->first();
+            
+            if(empty($customer)){
+                return [
+                    'error' => 1,
+                    'code' => 'customer_not_found',
+                    'description' => 'Usuário não listado na base de dados'
+                ];
+            }
+
+            $customer->delete();
+
+            return [
+                'error' => 0,
+                'code' => 'updated_customer',
+                'description' => 'Deletado com sucesso'
+            ];  
+
+        } catch (Exception $e) {
+            Log::error('[Delete Customer]', [$e->getMessage(), [$e->getLine(), $e->getFile()]]);
+            return [
+                'error' => 1,
+                'code' => 'invalid_request',
+                'description' => 'Ocorreu um erro inesperado'
+            ];
+        }
     }
 }

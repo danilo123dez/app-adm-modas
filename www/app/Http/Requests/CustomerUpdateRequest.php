@@ -17,7 +17,7 @@ class CustomerUpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -30,10 +30,10 @@ class CustomerUpdateRequest extends FormRequest
 
         $fillable = [
             'email' => 'email',
-            'password' => 'string',
-			'enterprise_name' => 'string',
-			'cpf' => 'string',
-            'nome' => 'string'
+            'password' => 'string|min:1',
+			'enterprise_name' => 'string|min:1',
+			'cpf' => 'string|min:11',
+            'nome' => 'string|min:2'
         ];
         
         return $fillable;
@@ -42,12 +42,7 @@ class CustomerUpdateRequest extends FormRequest
     public function messages()
 	{
 		return [
-			'email.required' => 'Este campo não pode ser vazio',
-			'email.unique' => 'O e-mail inserido já está em uso',
-			'password.required' => 'A senha é obrigatória',
-			'enterprise_name.required' => 'O nome da empresa é obrigatório',
-			'cpf.required' => 'O CPF é obrigatório',
-			'nome.required' => 'O nome é obrigatório'
+			'email.email' => 'Digite um e-mail válido',
 		];
     }
     
