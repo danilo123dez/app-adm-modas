@@ -35,7 +35,9 @@ class AuthServiceProvider extends ServiceProvider
         Passport::personalAccessTokensExpireIn(now()->addMonths(6));
         
         Passport::tokensCan([
-			'customer-register' => 'Do customer registration',
+            'customer' => 'Customer registration, update and delete',
+            'store-registration' => 'Do registration store',
+            'store' => 'Update and delete store'
         ]);
         
         /* Passport::setDefaultScope([

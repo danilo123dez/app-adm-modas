@@ -15,6 +15,7 @@ class CreateStoresTable extends Migration
     {
         Schema::create('stores', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->uuid('uuid');
             $table->string('nome', '100');
             $table->float('comissao', 7, 2);
             $table->bigInteger('empresa_id')->references('id')->on('enterprises');

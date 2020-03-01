@@ -26,11 +26,22 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['prefix' => 'customers', 'middleware' => 'client:customer-register'], function () {
+Route::group(['prefix' => 'customers', 'middleware' => 'client:customer'], function () {
     Route::post('/', 'CustomerController@store');
 
     Route::group(['prefix' => '{uuid}'], function () {
         Route::put('/', 'CustomerController@update');
         Route::delete('/', 'CustomerController@delete');
+    });
+});
+
+Route::group(['prefix' => 'lojas'], function () {
+    Route::group(['prefix' => '{customer_uuid}', 'middleware' => 'client:store-registration'], function () { 
+        Route::post('/', 'LojasController@store');
+    });
+
+    Route::group(['prefix' => '{store_uuid}', 'middleware' => 'client:store'], function () {
+        Route::put('/', 'LojasController@update');
+        Route::delete('/', 'LojasController@delete');
     });
 });

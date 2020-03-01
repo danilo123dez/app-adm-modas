@@ -11,7 +11,7 @@ class Customer extends Model
   protected $fillable = ['email', 'cpf', 'nome', 'empresa_id'];
 
     public function Enterprise() {
-        return $this->hasOne('App\Models\Enterprises', 'id');
+        return $this->hasOne('App\Models\Enterprises', 'id', 'empresa_id');
     }
 
 	/**
