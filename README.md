@@ -11,7 +11,7 @@
 
 <p>
 ```
- git clone --recurse-submodules https://github.com/danilo123dez/app-adm-modas.git
+git clone --recurse-submodules https://github.com/danilo123dez/app-adm-modas.git
 ```
 </p>
 
