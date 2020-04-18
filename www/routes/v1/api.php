@@ -35,13 +35,21 @@ Route::group(['prefix' => 'customers', 'middleware' => 'client:customer'], funct
     });
 });
 
-Route::group(['prefix' => 'lojas'], function () {
-    Route::group(['prefix' => '{customer_uuid}', 'middleware' => 'client:store-registration'], function () { 
+Route::group(['prefix' => 'lojas', 'middleware' => 'client:store'], function () {
+    Route::group(['prefix' => '{customer_uuid}'], function () { 
         Route::post('/', 'LojasController@store');
     });
 
-    Route::group(['prefix' => '{store_uuid}', 'middleware' => 'client:store'], function () {
+    Route::group(['prefix' => '{store_uuid}'], function () {
         Route::put('/', 'LojasController@update');
         Route::delete('/', 'LojasController@delete');
+    });
+});
+
+Route::group(['prefix' => 'lancamentos'], function () {
+    Route::group(['prefix' => '{customer_uuid}'], function () { 
+        Route::group(['prefix' => '{store_uuid}'], function () { 
+            Route::post('/', 'LancamentosController@store');
+        });
     });
 });

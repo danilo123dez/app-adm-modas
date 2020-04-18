@@ -29,9 +29,8 @@ class CustomerUpdateRequest extends FormRequest
     {
 
         $fillable = [
+            'nome' => 'string|min:1',
             'email' => 'email',
-            'password' => 'string|min:1',
-			'enterprise_name' => 'string|min:1',
 			'cpf' => 'string|min:11',
             'nome' => 'string|min:2'
         ];

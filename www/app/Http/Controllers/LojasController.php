@@ -25,7 +25,7 @@ class LojasController extends Controller
 
             $empresa = $customer->Enterprise()->first();
 
-            $empresa->Stores()->create($request->all());
+            $empresa->Stores()->create($request->validated());
             return [
                 'error' => 0,
                 'code' => 'stored_store',

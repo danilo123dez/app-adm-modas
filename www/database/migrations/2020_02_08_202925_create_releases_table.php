@@ -19,8 +19,8 @@ class CreateReleasesTable extends Migration
             $table->mediumInteger('romaneio');
             $table->string('cliente', 100);
             $table->bigInteger('loja_id')->references('id')->on('stores');
-            $table->date('date_compra');
-            $table->date('date_vencimento');
+            $table->date('data_compra');
+            $table->date('data_vencimento');
             $table->float('valor', 7, 2);
             $table->timestamps();
         });

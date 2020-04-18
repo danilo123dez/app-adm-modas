@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\CustomerStoreRequest;
+use App\Http\Requests\CustomerUpdateRequest;
 use Illuminate\Contracts\Session\Session;
 use LaravelLegends\PtBrValidator\Validator;
 
@@ -33,7 +34,9 @@ class CustomerController extends Controller
 
             $user = User::create([
                 'email' => $customer->email,
-                'password' => $request['password']
+                'password' => $request['password'],
+                'loginable_type' => Customer::class,
+                'loginable_id' => $customer->id
             ]);
             return [
                 'error' => 0,
@@ -51,7 +54,7 @@ class CustomerController extends Controller
         }
     }
 
-    public function update($uuid, Request $request) {
+    public function update($uuid, CustomerUpdateRequest $request) {
 
         try {
             $customer = Customer::where('uuid', $uuid)->first();
@@ -73,7 +76,7 @@ class CustomerController extends Controller
                 ];
             }
             
-            $customer->update($request->all());
+            $customer->update($request->validated());
 
             return [
                 'error' => 0,
@@ -82,6 +85,7 @@ class CustomerController extends Controller
             ];  
 
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error('[Update Customer]', [$e->getMessage(), [$e->getLine(), $e->getFile()]]);
             return [
                 'error' => 1,
@@ -91,7 +95,7 @@ class CustomerController extends Controller
         }
     }
 
-    public function delete($uuid, Request $request) {
+    public function delete($uuid) {
         try {
             $customer = Customer::where('uuid', $uuid)->first();
             
@@ -103,7 +107,10 @@ class CustomerController extends Controller
                 ];
             }
 
+            $user = $customer->User()->first();
+            
             $customer->delete();
+            $user->delete();
 
             return [
                 'error' => 0,
