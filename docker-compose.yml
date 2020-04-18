@@ -1,0 +1,25 @@
+version: '2.1'
+services:
+
+  # The Database
+  database:
+    image: mysql/mysql-server:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_USER: docker
+      MYSQL_PASSWORD: docker123
+      MYSQL_DATABASE: app-adm-moda
+
+  # The Application
+  app:
+    build:
+      context: ./submodules/docker
+      dockerfile: Dockerfile
+    working_dir: /var/www/html
+    volumes:
+      - ./www/:/var/www/html
+    privileged: true
+    tty: true
+    stdin_open: true
+    ports:
+      - "80:80"

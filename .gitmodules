@@ -1,0 +1,3 @@
+[submodule "submodules/docker"]
+	path = submodules/docker
+	url = https://github.com/danilo123dez/docker.git
