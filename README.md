@@ -10,6 +10,8 @@
 ## 🧐 Sobre <a name = "clone"></a>
 
 <p>
+  Para Clonar o projeto com os submodules: 
+  
 ```
 git clone --recurse-submodules https://github.com/danilo123dez/app-adm-modas.git
 ```
