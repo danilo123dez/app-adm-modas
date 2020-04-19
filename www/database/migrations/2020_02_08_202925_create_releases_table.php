@@ -15,6 +15,7 @@ class CreateReleasesTable extends Migration
     {
         Schema::create('releases', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->uuid('uuid');
             $table->mediumInteger('boleta');
             $table->mediumInteger('romaneio');
             $table->string('cliente', 100);

@@ -9,7 +9,7 @@ class Stores extends Model
     protected $fillable = ['nome', 'comissao', 'empresa_id'];
 
     public function Releases(){
-        return $this->hasMany('App\Models\Releases', 'id');
+        return $this->hasMany('App\Models\Releases', 'loja_id');
     }
 
     public function Enterprise() {
