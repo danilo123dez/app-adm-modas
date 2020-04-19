@@ -46,10 +46,14 @@ Route::group(['prefix' => 'lojas', 'middleware' => 'client:store'], function () 
     });
 });
 
-Route::group(['prefix' => 'lancamentos'], function () {
+Route::group(['prefix' => 'lancamentos', 'middleware' => 'client:release'], function () {
     Route::group(['prefix' => '{customer_uuid}'], function () { 
         Route::group(['prefix' => '{store_uuid}'], function () { 
             Route::post('/', 'LancamentosController@store');
+            Route::group(['prefix' => '{releases_uuid}'], function () {
+                Route::put('/', 'LancamentosController@update');
+                Route::delete('/', 'LancamentosController@delete');
+            });
         });
     });
 });

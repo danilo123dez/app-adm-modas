@@ -92,7 +92,7 @@ class LojasController extends Controller
             ];
 
         }catch(\Exception $e){
-            Log::error('[delete Stores]', [$e->getMessage(), [$e->getLine(), $e->getFile()]]);
+            Log::error('[Delete Stores]', [$e->getMessage(), [$e->getLine(), $e->getFile()]]);
             return [
                 'error' => 1,
                 'code' => 'invalid_request',

@@ -36,7 +36,8 @@ class AuthServiceProvider extends ServiceProvider
         
         Passport::tokensCan([
             'customer' => 'Customer registration, update and delete',
-            'store' => 'Do registration store, update and delete'
+            'store' => 'Stores registration, update and delete',
+            'release' => 'Releases registration, update and delete'
         ]);
         
         /* Passport::setDefaultScope([
