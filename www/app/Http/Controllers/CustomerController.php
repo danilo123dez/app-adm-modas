@@ -17,6 +17,19 @@ use LaravelLegends\PtBrValidator\Validator;
 class CustomerController extends Controller
 {
 
+    public function infoUserCustomer(Request $request){
+        $user = $request->user();
+        $customer = $user->loginable()->first();
+        $enterprise = $customer->Enterprise()->select('nome')->where('id', $customer['empresa_id'])->first()->nome;
+        $customer = $customer->toArray();
+        $customer['nome_empresa'] = $enterprise;
+        return response([
+            'error' => 0,
+            'code' => 'customer',
+            'data' => $customer
+        ],200);
+    }
+
     public function store(CustomerStoreRequest $request){
 
         try{

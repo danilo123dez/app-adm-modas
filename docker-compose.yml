@@ -23,3 +23,16 @@ services:
     stdin_open: true
     ports:
       - "80:80"
+
+  adm-moda:
+    build:
+      context: ./submodules/docker
+      dockerfile: Dockerfile
+    working_dir: /var/www/html
+    volumes:
+      - ./submodules/adm-moda/www/:/var/www/html
+    privileged: true
+    tty: true
+    stdin_open: true
+    ports:
+      - "81:80"  
