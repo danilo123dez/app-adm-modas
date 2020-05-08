@@ -17,4 +17,8 @@ class Enterprises extends Model
         return $this->hasMany('App\Models\Stores', 'empresa_id');
     }
 
+    public function Releases(){
+        return $this->hasManyThrough('App\Models\Releases', 'App\Models\Stores', 'empresa_id', 'loja_id', 'id', 'id');
+    }
+
 }

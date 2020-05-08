@@ -1,3 +1,6 @@
 [submodule "submodules/docker"]
 	path = submodules/docker
 	url = https://github.com/danilo123dez/docker.git
+[submodule "submodules/adm-moda"]
+	path = submodules/adm-moda
+	url = https://github.com/danilo123dez/adm-moda.git

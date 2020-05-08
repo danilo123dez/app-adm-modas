@@ -33,7 +33,8 @@ class LancamentoUpdateRequest extends FormRequest
             'cliente' => 'string',
             'data_compra' => 'date_format:d/m/Y',
             'data_vencimento' => 'date_format:d/m/Y',
-            'valor' => 'between:0.01,500.000'
+            'valor' => 'between:0.01,500.000',
+            'loja' => 'string'
         ];
     }
 
