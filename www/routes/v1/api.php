@@ -36,7 +36,7 @@ Route::group(['prefix' => 'customers', 'middleware' => 'client:customer'], funct
 });
 
 Route::group(['prefix' => 'lojas', 'middleware' => 'client:store'], function () {
-    Route::group(['prefix' => '{customer_uuid}'], function () { 
+    Route::group(['prefix' => '{customer_uuid}'], function () {
         Route::get('/', 'LojasController@index');
         Route::post('/', 'LojasController@store');
 
@@ -49,10 +49,10 @@ Route::group(['prefix' => 'lojas', 'middleware' => 'client:store'], function () 
 });
 
 Route::group(['prefix' => 'lancamentos', 'middleware' => 'client:release'], function () {
-    Route::group(['prefix' => '{customer_uuid}'], function () { 
+    Route::group(['prefix' => '{customer_uuid}'], function () {
         Route::get('/', 'LancamentosController@index');
-
-        Route::group(['prefix' => '{store_uuid}'], function () { 
+        Route::get('/semana', 'LancamentosController@getWeek');
+        Route::group(['prefix' => '{store_uuid}'], function () {
             Route::post('/', 'LancamentosController@store');
 
             Route::group(['prefix' => '{releases_uuid}'], function () {
