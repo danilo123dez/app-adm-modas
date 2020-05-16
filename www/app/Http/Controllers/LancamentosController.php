@@ -27,14 +27,14 @@ class LancamentosController extends Controller
         }
 
         $empresa = $customer->Enterprise()->first();
-        
+
         $releases = $empresa->Releases()->select('releases.uuid', 'releases.boleta', 'releases.romaneio', 'releases.cliente',
                     'releases.data_compra', 'releases.data_vencimento', 'releases.valor', 'stores.nome as nome_loja', 'stores.uuid as loja_uuid')->get();
-        
+
         return [
             'error' => 0,
             'code' => 'releases',
-            'data' => ReleasesResource::collection($releases) 
+            'data' => ReleasesResource::collection($releases)
         ];
 
     }
@@ -150,7 +150,7 @@ class LancamentosController extends Controller
             }else{
                 $lancamento = $loja->Releases()->where('uuid', $releases_uuid)->first();
             }
-            
+
 
             if(empty($lancamento)){
                 return [
@@ -167,7 +167,7 @@ class LancamentosController extends Controller
             if(!empty($inputs_validated['data_vencimento'])){
                 $inputs_validated['data_vencimento'] = Carbon::parse( Carbon::parse( str_replace('/', '-', $inputs_validated['data_vencimento']) )->format('Y/m/d') );
             }
-            
+
             $lancamento->update($inputs_validated);
             return [
                 'error' => 0,
@@ -181,7 +181,7 @@ class LancamentosController extends Controller
                 'error' => 1,
                 'code' => 'invalid_request',
                 'description' => 'Ocorreu um erro inesperado'
-            ]; 
+            ];
         }
     }
 
@@ -217,7 +217,7 @@ class LancamentosController extends Controller
                     'description' => 'Lançamento não listado na base de dados'
                 ];
             }
-            
+
             $lancamento->delete();
             return [
                 'error' => 0,
@@ -231,12 +231,11 @@ class LancamentosController extends Controller
                 'error' => 1,
                 'code' => 'invalid_request',
                 'description' => 'Ocorreu um erro inesperado'
-            ]; 
+            ];
         }
     }
 
     public function getWeek($customer_uuid){
-        return 1;
         $customer = Customer::where('uuid', $customer_uuid)->first();
 
         if (empty($customer)) {
@@ -248,18 +247,18 @@ class LancamentosController extends Controller
         }
 
         $empresa = $customer->Enterprise()->first();
-        
+
         $today = Carbon::now()->timezone('America/Sao_Paulo');
         $one_week = Carbon::now()->timezone('America/Sao_Paulo')->addWeek();
 
         $releases = $empresa->Releases()->select('releases.uuid', 'releases.boleta', 'releases.romaneio', 'releases.cliente',
                     'releases.data_compra', 'releases.data_vencimento', 'releases.valor', 'stores.nome as nome_loja', 'stores.uuid as loja_uuid')
-                    ->where('releases.data_vencimento', '=>', $today)->where('releases.data_vencimento', '<=', $one_week)->get();
-        
+                    ->where('releases.data_vencimento', '>=', $today)->where('releases.data_vencimento', '<=', $one_week)->get();
+
         return [
             'error' => 0,
             'code' => 'releases',
-            'data' => ReleasesResource::collection($releases) 
+            'data' => ReleasesResource::collection($releases)
         ];
     }
 }

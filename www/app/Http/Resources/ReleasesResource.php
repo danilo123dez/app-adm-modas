@@ -17,19 +17,24 @@ class ReleasesResource extends JsonResource
     public function toArray($request)
     {
         if(empty($this->nome_loja) && !empty($this->loja_id)){
-            $loja = Stores::find($this->loja_id);
+            $loja = Stores::select('nome', 'uuid', 'comissao')->where('id',$this->loja_id)->first();
             $nome_loja = $loja->nome;
             $uuid_loja = $loja->uuid;
+            $comissao_loja = $loja->comissao;
             $loja_return = [
                 'nome_loja' => $nome_loja,
-                'loja_uuid' => $uuid_loja
+                'loja_uuid' => $uuid_loja,
+                'loja_comissao' => $comissao_loja
             ];
         }elseif(!empty($this->nome_loja)){
+            $loja = Stores::select('comissao')->where('uuid',$this->loja_uuid)->first();
             $nome_loja = $this->nome_loja;
             $uuid_loja = $this->loja_uuid;
+            $comissao_loja = $loja->comissao;
             $loja_return = [
                 'nome_loja' => $nome_loja,
-                'loja_uuid' => $uuid_loja
+                'loja_uuid' => $uuid_loja,
+                'loja_comissao' => $comissao_loja
             ];
         }else{
             $loja_return = '';
