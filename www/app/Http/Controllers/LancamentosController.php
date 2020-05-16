@@ -15,7 +15,7 @@ use App\Models\Releases;
 class LancamentosController extends Controller
 {
 
-    public function index($customer_uuid){
+    public function index($customer_uuid, Request $request){
         $customer = Customer::where('uuid', $customer_uuid)->first();
 
         if (empty($customer)) {
@@ -28,13 +28,49 @@ class LancamentosController extends Controller
 
         $empresa = $customer->Enterprise()->first();
 
-        $releases = $empresa->Releases()->select('releases.uuid', 'releases.boleta', 'releases.romaneio', 'releases.cliente',
-                    'releases.data_compra', 'releases.data_vencimento', 'releases.valor', 'stores.nome as nome_loja', 'stores.uuid as loja_uuid')->get();
+        if(!empty($request->download) && $request->download){
+            $releases = $empresa->Releases()->select('boleta', 'romaneio', 'cliente', 'data_compra', 'data_vencimento', 'valor', 'stores.nome as nome_loja', 'stores.comissao','loja_id');
+        }else{
+            $releases = $empresa->Releases()->select('releases.uuid', 'releases.boleta', 'releases.romaneio', 'releases.cliente',
+                        'releases.data_compra', 'releases.data_vencimento', 'releases.valor', 'stores.nome as nome_loja', 'stores.uuid as loja_uuid');
+        }
+
+        if(!empty($request->all())){
+            if($request->tipo_pesquisa != 'T' && $request->tipo_pesquisa != 'data_compra' && $request->tipo_pesquisa != 'data_vencimento' ){
+
+                if($request->tipo_pesquisa === 'nome_loja'){
+                    $table_where = "stores.nome";
+                }else{
+                    $table_where = "releases.$request->tipo_pesquisa";
+                }
+
+                $releases = $releases->where($table_where, 'LIKE', "%$request->pesquisa_texto%");
+
+            }elseif($request->tipo_pesquisa === 'data_compra' || $request->tipo_pesquisa === 'data_vencimento'){
+                $releases = $releases->where("releases.$request->tipo_pesquisa", '>=', Carbon::parse( str_replace('/', '-', $request->pesquisa_data_inicio) ) )
+                                    ->where("releases.$request->tipo_pesquisa", '<=', Carbon::parse( str_replace('/', '-', $request->pesquisa_data_fim) ) );
+            }
+
+            if(!empty($request->exibe_lancamento_vencido)){
+                if($request->exibe_lancamento_vencido === 'N'){
+                    $releases = $releases->where('releases.data_vencimento', '>=', Carbon::now()->timezone('America/Sao_Paulo'));
+                }
+            }
+        }else{
+            $releases = $releases->where('releases.data_vencimento', '>=', Carbon::now()->timezone('America/Sao_Paulo'));
+        }
+
+        if(!empty($request->download) && $request->download){
+            $releases = $releases->get()->groupBy('loja_id');
+        }else{
+            $releases = ReleasesResource::collection($releases->get());
+        }
+
 
         return [
             'error' => 0,
             'code' => 'releases',
-            'data' => ReleasesResource::collection($releases)
+            'data' => $releases
         ];
 
     }
@@ -235,7 +271,7 @@ class LancamentosController extends Controller
         }
     }
 
-    public function getWeek($customer_uuid){
+    public function getWeek($customer_uuid, Request $request){
         $customer = Customer::where('uuid', $customer_uuid)->first();
 
         if (empty($customer)) {
@@ -251,14 +287,19 @@ class LancamentosController extends Controller
         $today = Carbon::now()->timezone('America/Sao_Paulo');
         $one_week = Carbon::now()->timezone('America/Sao_Paulo')->addWeek();
 
-        $releases = $empresa->Releases()->select('releases.uuid', 'releases.boleta', 'releases.romaneio', 'releases.cliente',
-                    'releases.data_compra', 'releases.data_vencimento', 'releases.valor', 'stores.nome as nome_loja', 'stores.uuid as loja_uuid')
-                    ->where('releases.data_vencimento', '>=', $today)->where('releases.data_vencimento', '<=', $one_week)->get();
+        if( !empty($request->download) && $request->download){
+            $releases = $empresa->Releases()->select('boleta', 'romaneio', 'cliente', 'data_compra', 'data_vencimento', 'valor', 'stores.nome as nome_loja', 'stores.comissao','loja_id')->get()->groupBy('loja_id');
+        }else{
+            $releases = $empresa->Releases()->select('releases.uuid', 'releases.boleta', 'releases.romaneio', 'releases.cliente',
+            'releases.data_compra', 'releases.data_vencimento', 'releases.valor', 'stores.nome as nome_loja', 'stores.uuid as loja_uuid')
+            ->where('releases.data_vencimento', '>=', $today)->where('releases.data_vencimento', '<=', $one_week)->get();
+            $releases = ReleasesResource::collection($releases);
+        }
 
         return [
             'error' => 0,
             'code' => 'releases',
-            'data' => ReleasesResource::collection($releases)
+            'data' => $releases
         ];
     }
 }
