@@ -234,4 +234,32 @@ class LancamentosController extends Controller
             ]; 
         }
     }
+
+    public function getWeek($customer_uuid){
+        return 1;
+        $customer = Customer::where('uuid', $customer_uuid)->first();
+
+        if (empty($customer)) {
+            return response([
+                'error' => 1,
+                'code' => 'customer_not_found',
+                'description' => 'Usuário não listado na base de dados'
+            ], 404);
+        }
+
+        $empresa = $customer->Enterprise()->first();
+        
+        $today = Carbon::now()->timezone('America/Sao_Paulo');
+        $one_week = Carbon::now()->timezone('America/Sao_Paulo')->addWeek();
+
+        $releases = $empresa->Releases()->select('releases.uuid', 'releases.boleta', 'releases.romaneio', 'releases.cliente',
+                    'releases.data_compra', 'releases.data_vencimento', 'releases.valor', 'stores.nome as nome_loja', 'stores.uuid as loja_uuid')
+                    ->where('releases.data_vencimento', '=>', $today)->where('releases.data_vencimento', '<=', $one_week)->get();
+        
+        return [
+            'error' => 0,
+            'code' => 'releases',
+            'data' => ReleasesResource::collection($releases) 
+        ];
+    }
 }

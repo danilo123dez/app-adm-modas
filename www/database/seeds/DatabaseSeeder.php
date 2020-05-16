@@ -5,6 +5,7 @@ use App\Models\Customer;
 use App\Models\Enterprises;
 use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -33,7 +34,7 @@ class DatabaseSeeder extends Seeder
 
             $user = User::create([
                 'email' => $customer->email,
-                'password' => $faker->password,
+                'password' => 123,
                 'loginable_type' => Customer::class,
                 'loginable_id' => $customer->id
             ]);

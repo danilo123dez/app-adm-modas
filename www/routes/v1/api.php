@@ -51,7 +51,7 @@ Route::group(['prefix' => 'lojas', 'middleware' => 'client:store'], function () 
 Route::group(['prefix' => 'lancamentos', 'middleware' => 'client:release'], function () {
     Route::group(['prefix' => '{customer_uuid}'], function () { 
         Route::get('/', 'LancamentosController@index');
-
+        Route::get('/semana', 'LancamentosController@getWeek');
         Route::group(['prefix' => '{store_uuid}'], function () { 
             Route::post('/', 'LancamentosController@store');
 
