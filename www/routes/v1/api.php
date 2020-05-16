@@ -28,8 +28,8 @@ Route::middleware('auth:api')->get('/user', 'CustomerController@infoUserCustomer
 
 Route::group(['prefix' => 'customers', 'middleware' => 'client:customer'], function () {
     Route::post('/', 'CustomerController@store');
-
     Route::group(['prefix' => '{uuid}'], function () {
+        Route::get('/admin', 'CustomerController@admin');
         Route::put('/', 'CustomerController@update');
         Route::delete('/', 'CustomerController@delete');
     });

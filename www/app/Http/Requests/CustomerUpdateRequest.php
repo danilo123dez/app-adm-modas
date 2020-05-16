@@ -32,9 +32,10 @@ class CustomerUpdateRequest extends FormRequest
             'nome' => 'string|min:1',
             'email' => 'email',
 			'cpf' => 'string|min:11',
-            'nome' => 'string|min:2'
+            'nome' => 'string|min:2',
+            'nome_empresa' => 'string'
         ];
-        
+
         return $fillable;
     }
 
@@ -44,7 +45,7 @@ class CustomerUpdateRequest extends FormRequest
 			'email.email' => 'Digite um e-mail válido',
 		];
     }
-    
+
     protected function failedValidation(Validator $validator)
 	{
 		$errors = (new ValidationException($validator))->errors();

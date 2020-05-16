@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\CustomerStoreRequest;
 use App\Http\Requests\CustomerUpdateRequest;
+use App\Http\Resources\CustomerResource;
 use Illuminate\Contracts\Session\Session;
 use LaravelLegends\PtBrValidator\Validator;
 
@@ -20,13 +21,10 @@ class CustomerController extends Controller
     public function infoUserCustomer(Request $request){
         $user = $request->user();
         $customer = $user->loginable()->first();
-        $enterprise = $customer->Enterprise()->select('nome')->where('id', $customer['empresa_id'])->first()->nome;
-        $customer = $customer->toArray();
-        $customer['nome_empresa'] = $enterprise;
         return response([
             'error' => 0,
             'code' => 'customer',
-            'data' => $customer
+            'data' => new CustomerResource($customer)
         ],200);
     }
 
@@ -55,7 +53,7 @@ class CustomerController extends Controller
                 'error' => 0,
                 'code' => 'stored_customer',
                 'description' => 'Cadastro feito com sucesso'
-            ];   
+            ];
         }catch(Exception $e){
             DB::rollBack();
             Log::error('[Store Customer]', [$e->getMessage(), [$e->getLine(), $e->getFile()]]);
@@ -71,8 +69,8 @@ class CustomerController extends Controller
 
         try {
             $customer = Customer::where('uuid', $uuid)->first();
-            $customerEmail = Customer::where('email', $request['email'])->first();
-    
+            $customerEmail = Customer::where('email', $request['email'])->where('email', '!=', $customer->email)->first();
+
             if(empty($customer)){
                 return [
                     'error' => 1,
@@ -80,7 +78,7 @@ class CustomerController extends Controller
                     'description' => 'Usuário não listado na base de dados'
                 ];
             }
-    
+
             if (!empty($customerEmail)) {
                 return [
                     'error' => 1,
@@ -88,14 +86,19 @@ class CustomerController extends Controller
                     'description' => 'E-mail já está em uso'
                 ];
             }
-            
+
             $customer->update($request->validated());
+
+            if(!empty($request->nome_empresa)){
+                $customer->Enterprise()->first()->update(['nome' => $request->nome_empresa]);
+            }
 
             return [
                 'error' => 0,
                 'code' => 'updated_customer',
-                'description' => 'Atualizado com sucesso'
-            ];  
+                'description' => 'Atualizado com sucesso',
+                'data' => new CustomerResource($customer)
+            ];
 
         } catch (Exception $e) {
             DB::rollBack();
@@ -111,7 +114,7 @@ class CustomerController extends Controller
     public function delete($uuid) {
         try {
             $customer = Customer::where('uuid', $uuid)->first();
-            
+
             if(empty($customer)){
                 return [
                     'error' => 1,
@@ -121,7 +124,7 @@ class CustomerController extends Controller
             }
 
             $user = $customer->User()->first();
-            
+
             $customer->delete();
             $user->delete();
 
@@ -129,10 +132,43 @@ class CustomerController extends Controller
                 'error' => 0,
                 'code' => 'updated_customer',
                 'description' => 'Deletado com sucesso'
-            ];  
+            ];
 
         } catch (Exception $e) {
             Log::error('[Delete Customer]', [$e->getMessage(), [$e->getLine(), $e->getFile()]]);
+            return [
+                'error' => 1,
+                'code' => 'invalid_request',
+                'description' => 'Ocorreu um erro inesperado'
+            ];
+        }
+    }
+
+    public function admin($uuid){
+        try {
+            $customer = Customer::where('uuid', $uuid)->first();
+
+            if(empty($customer)){
+                return [
+                    'error' => 1,
+                    'code' => 'customer_not_found',
+                    'description' => 'Usuário não listado na base de dados'
+                ];
+            }
+
+            $empresa = $customer->Enterprise()->first();
+
+            $customers = $empresa->Customer()->get();
+
+            return [
+                'error' => 0,
+                'code' => 'admins_get',
+                'description' => 'Lista de todos os admin',
+                'data' => CustomerResource::collection($customers)
+            ];
+
+        } catch (Exception $e) {
+            Log::error('[Get Admin\'s]', [$e->getMessage(), [$e->getLine(), $e->getFile()]]);
             return [
                 'error' => 1,
                 'code' => 'invalid_request',
