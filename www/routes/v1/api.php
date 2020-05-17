@@ -23,6 +23,7 @@ Route::get('/', function () {
 })->name('login');
 
 Route::post('login', 'LoginController@login');
+Route::get('esqueci-senha', 'MailController@esqueciSenha');
 
 Route::middleware('auth:api')->get('/user', 'CustomerController@infoUserCustomer');
 
