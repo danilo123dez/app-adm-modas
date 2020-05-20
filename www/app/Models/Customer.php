@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Customer extends Model
 {
 
-  protected $fillable = ['email', 'cpf', 'nome', 'empresa_id'];
+  protected $fillable = ['email', 'cpf', 'nome', 'numero','empresa_id'];
 
     public function Enterprise() {
         return $this->hasOne('App\Models\Enterprises', 'id', 'empresa_id');

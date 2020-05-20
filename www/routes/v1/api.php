@@ -23,6 +23,13 @@ Route::get('/', function () {
 })->name('login');
 
 Route::post('login', 'LoginController@login');
+Route::post('esqueci-senha', 'MailController@esqueciSenha');
+Route::group(['prefix' => 'customer'], function () {
+    Route::get('/', 'CustomerController@Customer');
+    Route::group(['prefix' => '{customer_uuid}'], function () {
+        Route::post('update-pass', 'CustomerController@updatePass');
+    });
+});
 
 Route::middleware('auth:api')->get('/user', 'CustomerController@infoUserCustomer');
 

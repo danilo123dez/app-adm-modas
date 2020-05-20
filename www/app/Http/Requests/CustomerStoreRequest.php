@@ -30,34 +30,37 @@ class CustomerStoreRequest extends FormRequest
 		$fillable = [
             'email' => 'required|email|unique:users',
             'password' => 'required',
-			'enterprise_name' => 'required',
-			'cpf' => 'required|min:11',
-            'nome' => 'required'
+            'numero' => 'required',
+			'cpf' => 'required|min:11|unique:customers',
+            'nome' => 'required',
+            'customer_uuid' => 'required'
 		];
 
 		return $fillable;
 
 	}
-	
+
 	public function messages()
 	{
 		return [
 			'email.required' => 'O e-mail é obrigatório',
 			'email.unique' => 'O e-mail inserido já está em uso',
 			'password.required' => 'A senha é obrigatória',
-			'enterprise_name.required' => 'O nome da empresa é obrigatório',
 			'cpf.required' => 'O CPF é obrigatório',
-			'nome.required' => 'O nome é obrigatório'
+            'nome.required' => 'O nome é obrigatório',
+            'cpf.min' => 'O CPF precisa ter 11 caracteres',
+            'cpf.unique' => 'Este CPF já está sendo usado',
+            'customer_uuid.required' => 'Houve um erro inesperado, atualize a página e tente novamente!'
 		];
 	}
-    
+
 
 	protected function failedValidation(Validator $validator)
 	{
 		$errors = (new ValidationException($validator))->errors();
-		$errors = implode("\n" , array_map(function ($arr) {
+		$errors = str_replace("\n", ". \n", implode("\n" , array_map(function ($arr) {
 			return implode("\n" , $arr);
-		}, $errors));
+		}, $errors)));
 		throw new HttpResponseException(
 			response()->json(['error' => 1, 'code' => 'invalid_request', 'description' => $errors], JsonResponse::HTTP_UNPROCESSABLE_ENTITY)
 		);

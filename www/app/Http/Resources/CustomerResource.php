@@ -21,7 +21,8 @@ class CustomerResource extends JsonResource
             'email' => $this->email,
             'cpf' => $this->cpf,
             'nome' => $this->nome,
-            'nome_empresa' => $enterprise
+            'nome_empresa' => $enterprise,
+            'numero' => $this->numero
         ];
     }
 }
