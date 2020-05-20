@@ -22,7 +22,7 @@ class CreateReleasesTable extends Migration
             $table->bigInteger('loja_id')->references('id')->on('stores');
             $table->date('data_compra');
             $table->date('data_vencimento');
-            $table->float('valor', 7, 2);
+            $table->float('valor', 9, 2);
             $table->timestamps();
         });
     }
