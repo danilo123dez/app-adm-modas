@@ -19,6 +19,7 @@ class CreateCustomersTable extends Migration
             $table->string('email')->unique();
             $table->string('cpf', 11);
             $table->string('nome', 100);
+            $table->string('numero', 11);
             $table->bigInteger('empresa_id')->references('id')->on('enterprises');
             $table->timestamps();
         });

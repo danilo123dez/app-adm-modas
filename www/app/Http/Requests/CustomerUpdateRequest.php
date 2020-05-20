@@ -33,7 +33,7 @@ class CustomerUpdateRequest extends FormRequest
             'email' => 'email',
 			'cpf' => 'string|min:11',
             'nome' => 'string|min:2',
-            'nome_empresa' => 'string'
+            'numero' => 'string'
         ];
 
         return $fillable;
