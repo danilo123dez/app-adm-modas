@@ -33,7 +33,7 @@ class CustomerUpdateRequest extends FormRequest
             'email' => 'email',
 			'cpf' => 'string|min:11',
             'nome' => 'string|min:2',
-            'numero' => 'string'
+            'numero' => 'string|min:11'
         ];
 
         return $fillable;
@@ -42,7 +42,8 @@ class CustomerUpdateRequest extends FormRequest
     public function messages()
 	{
 		return [
-			'email.email' => 'Digite um e-mail válido',
+            'email.email' => 'Digite um e-mail válido',
+            "numero.min" => "O telefone precisa ter no minimo 11 digitos"
 		];
     }
 

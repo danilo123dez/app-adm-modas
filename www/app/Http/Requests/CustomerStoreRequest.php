@@ -30,7 +30,7 @@ class CustomerStoreRequest extends FormRequest
 		$fillable = [
             'email' => 'required|email|unique:users',
             'password' => 'required',
-            'numero' => 'required',
+            'numero' => 'required|min:11',
 			'cpf' => 'required|min:11|unique:customers',
             'nome' => 'required',
             'customer_uuid' => 'required'
@@ -50,7 +50,9 @@ class CustomerStoreRequest extends FormRequest
             'nome.required' => 'O nome é obrigatório',
             'cpf.min' => 'O CPF precisa ter 11 caracteres',
             'cpf.unique' => 'Este CPF já está sendo usado',
-            'customer_uuid.required' => 'Houve um erro inesperado, atualize a página e tente novamente!'
+            'customer_uuid.required' => 'Houve um erro inesperado, atualize a página e tente novamente!',
+            'numero.required' => "É necessário enviar um telefone",
+            "numero.min" => "O telefone precisa ter no minimo 11 digitos"
 		];
 	}
 
