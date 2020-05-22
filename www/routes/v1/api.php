@@ -42,6 +42,13 @@ Route::group(['prefix' => 'customers', 'middleware' => 'client:customer'], funct
     });
 });
 
+Route::group(['prefix' => 'enterprise', 'middleware' => 'client:customer'], function () {
+    Route::group(['prefix' => '{customer_uuid}'], function () {
+        Route::get('/', 'EnterpriseController@index');
+        Route::put('/', 'EnterpriseController@update');
+    });
+});
+
 Route::group(['prefix' => 'lojas', 'middleware' => 'client:store'], function () {
     Route::group(['prefix' => '{customer_uuid}'], function () {
         Route::get('/', 'LojasController@index');
